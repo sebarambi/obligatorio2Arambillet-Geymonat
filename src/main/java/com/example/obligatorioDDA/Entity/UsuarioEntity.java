@@ -27,8 +27,6 @@ public abstract class UsuarioEntity {
     @Column
     private String contrasenia;
 
-    @Column
-    private boolean esPremium;
 
     //Getters and Setters
     public int getId() {
@@ -79,24 +77,17 @@ public abstract class UsuarioEntity {
         this.contrasenia = contrasenia;
     }
 
-    public boolean isEsPremium() {
-        return esPremium;
-    }
-
-    public void setEsPremium(boolean esPremium) {
-        this.esPremium = esPremium;
-    }
 
     //Constructor
 
 
-    public UsuarioEntity( String nombre, String email, Date fechaRegistro, String contrasenia) {
+    public UsuarioEntity(int id, String nombre, String email, String contrasenia) {
+        this.id = id;
         this.nombre = nombre;
         this.email = email;
-        this.fechaRegistro = fechaRegistro;
+        fechaRegistro = new Date();
         compras = new ArrayList<VentaEntity>();
         this.contrasenia = contrasenia;
-        esPremium = false;
     }
 
     public UsuarioEntity() {

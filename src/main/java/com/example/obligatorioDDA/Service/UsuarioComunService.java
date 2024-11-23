@@ -1,4 +1,4 @@
 package com.example.obligatorioDDA.Service;
 
-public interface UsuarioService {
+public interface UsuarioComunService {
 }

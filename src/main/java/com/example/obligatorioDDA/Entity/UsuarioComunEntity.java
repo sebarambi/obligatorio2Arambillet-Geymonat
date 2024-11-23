@@ -5,8 +5,10 @@ import java.util.Date;
 public class UsuarioComunEntity extends UsuarioEntity {
 
     //Constructor
-    public UsuarioComunEntity(String nombre, String email, Date fechaRegistro, String contrasenia) {
-        super(nombre, email, fechaRegistro, contrasenia);
+
+
+    public UsuarioComunEntity(int id, String nombre, String email, String contrasenia) {
+        super(id, nombre, email, contrasenia);
     }
 
     public UsuarioComunEntity() {

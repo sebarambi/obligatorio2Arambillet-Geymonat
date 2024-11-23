@@ -18,9 +18,9 @@ public class UsuarioPremiumEntity extends UsuarioEntity {
     }
 
     //Constructor
-    public UsuarioPremiumEntity(String nombre, String email, Date fechaRegistro, String contrasenia, Date fechaMembresia) {
-        super(nombre, email, fechaRegistro, contrasenia);
+
+    public UsuarioPremiumEntity(int id, String nombre, String email, String contrasenia, Date fechaMembresia) {
+        super(id, nombre, email, contrasenia);
         this.fechaMembresia = fechaMembresia;
-        setEsPremium(true);
     }
 }
