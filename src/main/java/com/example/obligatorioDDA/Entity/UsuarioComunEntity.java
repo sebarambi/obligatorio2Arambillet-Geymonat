@@ -8,4 +8,7 @@ public class UsuarioComunEntity extends UsuarioEntity {
     public UsuarioComunEntity(String nombre, String email, Date fechaRegistro, String contrasenia) {
         super(nombre, email, fechaRegistro, contrasenia);
     }
+
+    public UsuarioComunEntity() {
+    }
 }
