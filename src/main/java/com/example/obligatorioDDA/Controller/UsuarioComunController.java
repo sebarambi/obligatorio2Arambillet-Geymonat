@@ -31,6 +31,6 @@ public class UsuarioComunController {
         usuario.setContrasenia((String) requestData.get("contrasenia"));
         usuario.setFechaRegistro((Date) requestData.get("fechaRegistro"));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user));
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioComunService.save(usuario));
     }
 }
