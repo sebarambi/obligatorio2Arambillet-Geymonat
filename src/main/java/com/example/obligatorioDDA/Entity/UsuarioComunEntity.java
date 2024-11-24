@@ -1,7 +1,10 @@
 package com.example.obligatorioDDA.Entity;
 
-import java.util.Date;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
+import java.util.Date;
+@Entity
 public class UsuarioComunEntity extends UsuarioEntity {
 
     //Constructor

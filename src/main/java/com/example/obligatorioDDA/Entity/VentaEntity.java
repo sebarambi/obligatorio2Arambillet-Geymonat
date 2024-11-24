@@ -11,16 +11,18 @@ public class VentaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idVenta;
 
-    @Column
+    @ManyToOne
+    @JoinColumn(name = "idUsuario")
     private UsuarioEntity usuarioEntity;
+
+    @OneToMany(mappedBy = "ventaEntity", cascade = CascadeType.ALL)
+    private List<DetalleVentaEntity> listaDetalles;
 
     @Column
     private Date fechaDeVenta;
 
     @Column
     private int montoTotal;
-
-    private List<DetalleVentaEntity> listaDetalles;
 
     //Getters and Setters
     public int getIdVenta() {

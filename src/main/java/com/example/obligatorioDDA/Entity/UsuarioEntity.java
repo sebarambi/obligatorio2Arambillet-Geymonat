@@ -22,6 +22,7 @@ public abstract class UsuarioEntity {
     @Column
     private Date fechaRegistro;
 
+    @OneToMany(mappedBy = "usuarioEntity", cascade = CascadeType.ALL)
     private List<VentaEntity> compras;
 
     @Column

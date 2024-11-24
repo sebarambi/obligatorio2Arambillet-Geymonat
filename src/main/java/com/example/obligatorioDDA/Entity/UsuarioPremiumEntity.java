@@ -1,9 +1,11 @@
 package com.example.obligatorioDDA.Entity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 
 import java.util.Date;
 
+@Entity
 public class UsuarioPremiumEntity extends UsuarioEntity {
     @Column
     private Date fechaMembresia;
