@@ -21,4 +21,8 @@ public class UsuarioComunServiceImpl implements UsuarioComunService {
     public List<UsuarioComunEntity> getAll() {
         return usuarioComunRepository.findAll();
     }
+
+    public void delete(int id) {
+        usuarioComunRepository.deleteById(id);
+    }
 }

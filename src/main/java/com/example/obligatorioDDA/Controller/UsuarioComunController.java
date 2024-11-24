@@ -71,4 +71,10 @@ public class UsuarioComunController {
     public ResponseEntity<List<UsuarioComunEntity>> getAllUsuarios() {
         return ResponseEntity.ok(usuarioComunService.getAll());
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteUsuario(@PathVariable int id) {
+        usuarioComunService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

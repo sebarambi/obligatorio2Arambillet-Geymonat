@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface UsuarioComunService {
     public UsuarioComunEntity save(UsuarioComunEntity usuarioComunEntity);
-    List<UsuarioComunEntity> getAll();
+    public List<UsuarioComunEntity> getAll();
+    public void delete(int id);
 }
