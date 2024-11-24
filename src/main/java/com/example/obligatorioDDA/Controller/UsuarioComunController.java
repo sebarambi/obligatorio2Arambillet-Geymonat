@@ -8,13 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -66,5 +64,11 @@ public class UsuarioComunController {
         } else {
             throw new IllegalArgumentException("El formato de la fecha debe ser 'yyyy-MM-dd'.");
         }
+    }
+
+
+    @GetMapping("/all")
+    public ResponseEntity<List<UsuarioComunEntity>> getAllUsuarios() {
+        return ResponseEntity.ok(usuarioComunService.getAll());
     }
 }

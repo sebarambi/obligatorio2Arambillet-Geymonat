@@ -5,6 +5,8 @@ import com.example.obligatorioDDA.Repository.UsuarioComunRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UsuarioComunServiceImpl implements UsuarioComunService {
 
@@ -13,5 +15,10 @@ public class UsuarioComunServiceImpl implements UsuarioComunService {
 
     public UsuarioComunEntity save(UsuarioComunEntity usuarioComunEntity) {
         return usuarioComunRepository.save(usuarioComunEntity);
+    }
+
+
+    public List<UsuarioComunEntity> getAll() {
+        return usuarioComunRepository.findAll();
     }
 }
