@@ -2,6 +2,8 @@ package com.example.obligatorioDDA.Entity;
 
 import jakarta.persistence.*;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "Administradores")
 public class AdministradorEntity {
@@ -20,7 +22,11 @@ public class AdministradorEntity {
     private String contrasenia;
 
     @Column
-    private String fechaRegistro;
+    private Date fechaRegistro;
+
+    public AdministradorEntity() {
+
+    }
 
     //Getters and Setters
     public int getIdAdministrador() {
@@ -55,20 +61,20 @@ public class AdministradorEntity {
         this.contrasenia = contrasenia;
     }
 
-    public String getFechaRegistro() {
+    public Date getFechaRegistro() {
         return fechaRegistro;
     }
 
-    public void setFechaRegistro(String fechaRegistro) {
+    public void setFechaRegistro(Date fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
     }
 
     //Constructor
-    public AdministradorEntity(int idAdministrador, String nombre, String email, String contrasenia, String fechaRegistro) {
+    public AdministradorEntity(int idAdministrador, String nombre, String email, String contrasenia) {
         this.idAdministrador = idAdministrador;
         this.nombre = nombre;
         this.email = email;
         this.contrasenia = contrasenia;
-        this.fechaRegistro = fechaRegistro;
+        fechaRegistro = new Date();
     }
 }
