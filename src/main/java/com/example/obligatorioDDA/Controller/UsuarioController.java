@@ -2,6 +2,7 @@ package com.example.obligatorioDDA.Controller;
 
 
 import com.example.obligatorioDDA.Entity.UsuarioComunEntity;
+import com.example.obligatorioDDA.Entity.UsuarioEntity;
 import com.example.obligatorioDDA.Entity.UsuarioPremiumEntity;
 import com.example.obligatorioDDA.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @CrossOrigin(origins = "http://localhost:3000") //aca cambiar cuando hagamos react
@@ -94,5 +96,41 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<?> editarUsuario(@PathVariable int id, @RequestBody Map<String, Object> requestData) {
+        try {
+            // Buscar el usuario por ID
+            Optional<UsuarioEntity> usuarioOpt = usuarioService.findById(id);
+
+            if (usuarioOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
+            }
+
+            UsuarioEntity usuario = usuarioOpt.get();
+
+            // Actualizar los campos según el contenido del mapa
+            if (requestData.containsKey("nombre") && requestData.get("nombre") instanceof String) {
+                usuario.setNombre((String) requestData.get("nombre"));
+            }
+            if (requestData.containsKey("email") && requestData.get("email") instanceof String) {
+                usuario.setEmail((String) requestData.get("email"));
+            }
+            if (requestData.containsKey("contrasenia") && requestData.get("contrasenia") instanceof String) {
+                usuario.setContrasenia((String) requestData.get("contrasenia"));
+            }
+            if (requestData.containsKey("tarjeta") && requestData.get("tarjeta") instanceof String) {
+                usuario.setTarjeta((String) requestData.get("tarjeta")); // Asegúrate de que este campo exista en la entidad
+            }
+
+            // Guardar los cambios
+            UsuarioEntity usuarioActualizado = usuarioService.save(usuario);
+            return ResponseEntity.ok(usuarioActualizado);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al editar el usuario: " + e.getMessage());
+        }
+    }
+
 
 }

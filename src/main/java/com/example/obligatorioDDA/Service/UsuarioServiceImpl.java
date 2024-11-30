@@ -110,5 +110,15 @@ public class UsuarioServiceImpl implements UsuarioService {
         return usuarioRepository.save(usuarioComun);
     }
 
+    @Override
+    public Optional<UsuarioEntity> findById(int id) {
+        return usuarioRepository.findById(id);
+    }
+
+    @Override
+    public UsuarioEntity save(UsuarioEntity usuarioEntity) {
+        return usuarioRepository.save(usuarioEntity);
+    }
+
 }
 

@@ -30,6 +30,8 @@ public abstract class UsuarioEntity {
     @Column
     private String contrasenia;
 
+    @Column
+    private String tarjeta;
 
     //Getters and Setters
     public int getId() {
@@ -80,6 +82,13 @@ public abstract class UsuarioEntity {
         this.contrasenia = contrasenia;
     }
 
+    public String getTarjeta() {
+        return tarjeta;
+    }
+
+    public void setTarjeta(String tarjeta) {
+        this.tarjeta = tarjeta;
+    }
 
     //Constructor
     public UsuarioEntity(int id, String nombre, String email, String contrasenia) {
@@ -89,6 +98,7 @@ public abstract class UsuarioEntity {
         this.fechaRegistro = LocalDate.now();
         compras = new ArrayList<VentaEntity>();
         this.contrasenia = contrasenia;
+        tarjeta = null;
     }
 
     public UsuarioEntity() {
