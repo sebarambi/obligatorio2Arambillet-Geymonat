@@ -3,8 +3,8 @@ package com.example.obligatorioDDA.Entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
-import java.util.Date;
 @Entity
+@Table(name = "usuarios_comunes")
 public class UsuarioComunEntity extends UsuarioEntity {
 
     //Constructor

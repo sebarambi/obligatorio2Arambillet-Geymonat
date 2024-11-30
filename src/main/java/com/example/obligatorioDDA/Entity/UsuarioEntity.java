@@ -2,12 +2,14 @@ package com.example.obligatorioDDA.Entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "Usuarios")
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "usuarios")
+
 public abstract class UsuarioEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +22,7 @@ public abstract class UsuarioEntity {
     private String email;
 
     @Column
-    private Date fechaRegistro;
+    private LocalDate fechaRegistro;
 
     @OneToMany(mappedBy = "usuarioEntity", cascade = CascadeType.ALL)
     private List<VentaEntity> compras;
@@ -54,11 +56,11 @@ public abstract class UsuarioEntity {
         this.email = email;
     }
 
-    public Date getFechaRegistro() {
+    public LocalDate getFechaRegistro() {
         return fechaRegistro;
     }
 
-    public void setFechaRegistro(Date fechaRegistro) {
+    public void setFechaRegistro(LocalDate fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
     }
 
@@ -80,13 +82,11 @@ public abstract class UsuarioEntity {
 
 
     //Constructor
-
-
     public UsuarioEntity(int id, String nombre, String email, String contrasenia) {
         this.id = id;
         this.nombre = nombre;
         this.email = email;
-        fechaRegistro = new Date();
+        this.fechaRegistro = LocalDate.now();
         compras = new ArrayList<VentaEntity>();
         this.contrasenia = contrasenia;
     }
