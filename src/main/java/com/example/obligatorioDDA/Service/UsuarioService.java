@@ -7,7 +7,8 @@ import java.util.List;
 
 public interface UsuarioService {
     UsuarioComunEntity save(UsuarioComunEntity usuarioComunEntity);
-    List<UsuarioComunEntity> getAll();
+    List<UsuarioComunEntity> getAllc();
+    List<UsuarioPremiumEntity> getAllp();
     void delete(int id);
 
     // Metodo para convertir usuarios

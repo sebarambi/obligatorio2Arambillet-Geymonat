@@ -25,11 +25,20 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public List<UsuarioComunEntity> getAll() {
+    public List<UsuarioComunEntity> getAllc() {
         return usuarioRepository.findAll()
                 .stream()
                 .filter(UsuarioComunEntity.class::isInstance)
                 .map(UsuarioComunEntity.class::cast)
+                .toList();
+    }
+
+    @Override
+    public List<UsuarioPremiumEntity> getAllp() {
+        return usuarioRepository.findAll()
+                .stream()
+                .filter(UsuarioPremiumEntity.class::isInstance)
+                .map(UsuarioPremiumEntity.class::cast)
                 .toList();
     }
 

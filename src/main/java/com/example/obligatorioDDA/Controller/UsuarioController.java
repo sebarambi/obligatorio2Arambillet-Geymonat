@@ -24,6 +24,8 @@ public class UsuarioController {
     private UsuarioService usuarioComunService;
     @Autowired
     private UsuarioService usuarioService;
+    @Autowired
+    private UsuarioService usuarioPremiumService;
 
     @PostMapping("/add")
     public ResponseEntity<?> agregarUsuarios(@RequestBody Map<String, Object> requestData) {
@@ -55,9 +57,14 @@ public class UsuarioController {
         return valor == null || (valor instanceof String && ((String) valor).trim().isEmpty());
     }
 
-    @GetMapping("/all")
+    @GetMapping("/allComun")
     public ResponseEntity<List<UsuarioComunEntity>> getAllUsuarios() {
-        return ResponseEntity.ok(usuarioComunService.getAll());
+        return ResponseEntity.ok(usuarioComunService.getAllc());
+    }
+
+    @GetMapping("/allPremium")
+    public ResponseEntity<List<UsuarioPremiumEntity>> getAllUsuariosPremium() {
+        return ResponseEntity.ok(usuarioPremiumService.getAllp());
     }
 
     @DeleteMapping("/delete/{id}")
