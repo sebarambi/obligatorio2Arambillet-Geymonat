@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Videojuegos")
-public class VideojuegoEntity {
+public class VideoJuegoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idVideojuego;
@@ -75,12 +75,15 @@ public class VideojuegoEntity {
 
     //Constructor
 
-    public VideojuegoEntity(int idVideojuego, String nombreVideojuego, String descripcion, int precio, String imagen, int stock) {
+    public VideoJuegoEntity(int idVideojuego, String nombreVideojuego, String descripcion, int precio, String imagen, int stock) {
         this.idVideojuego = idVideojuego;
         this.nombreVideojuego = nombreVideojuego;
         this.descripcion = descripcion;
         this.precio = precio;
         this.imagen = imagen;
         this.stock = stock;
+    }
+
+    public VideoJuegoEntity() {
     }
 }

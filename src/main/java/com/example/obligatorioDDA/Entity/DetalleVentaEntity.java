@@ -14,7 +14,7 @@ public class DetalleVentaEntity {
 
     @ManyToOne
     @JoinColumn(name = "idVideojuego")
-    private VideojuegoEntity videojuegoEntity;
+    private VideoJuegoEntity videojuegoEntity;
 
     @Column
     private int cantidad;
@@ -39,11 +39,11 @@ public class DetalleVentaEntity {
         this.cantidad = cantidad;
     }
 
-    public VideojuegoEntity getVideojuegoEntity() {
+    public VideoJuegoEntity getVideojuegoEntity() {
         return videojuegoEntity;
     }
 
-    public void setVideojuegoEntity(VideojuegoEntity videojuegoEntity) {
+    public void setVideojuegoEntity(VideoJuegoEntity videojuegoEntity) {
         this.videojuegoEntity = videojuegoEntity;
     }
 
@@ -64,7 +64,7 @@ public class DetalleVentaEntity {
     }
 
     // Constructor
-    public DetalleVentaEntity(int idDetalle, VentaEntity ventaEntity, VideojuegoEntity videojuegoEntity, int cantidad, int precioUnitario) {
+    public DetalleVentaEntity(int idDetalle, VentaEntity ventaEntity, VideoJuegoEntity videojuegoEntity, int cantidad, int precioUnitario) {
         this.idDetalle = idDetalle;
         this.ventaEntity = ventaEntity;
         this.videojuegoEntity = videojuegoEntity;
