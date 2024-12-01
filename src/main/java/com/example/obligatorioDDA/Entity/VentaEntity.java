@@ -1,5 +1,7 @@
 package com.example.obligatorioDDA.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -14,9 +16,11 @@ public class VentaEntity {
 
     @ManyToOne
     @JoinColumn(name = "idUsuario")
+    @JsonBackReference // Indica la referencia hija para evitar ciclos --------------------------------------
     private UsuarioEntity usuarioEntity;
 
     @OneToMany(mappedBy = "ventaEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference // Para evitar ciclos al serializar los detalles
     private List<DetalleVentaEntity> listaDetalles;
 
     @Column

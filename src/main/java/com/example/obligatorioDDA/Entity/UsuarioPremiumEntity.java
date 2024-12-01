@@ -25,6 +25,7 @@ public class UsuarioPremiumEntity extends UsuarioEntity {
         this.fechaMembresia = fechaMembresia;
     }
 
+
     //Constructor
     public UsuarioPremiumEntity(int id, String nombre, String email, String contrasenia, LocalDate fechaMembresia) {
         super(id, nombre, email, contrasenia);

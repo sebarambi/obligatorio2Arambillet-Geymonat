@@ -1,5 +1,6 @@
 package com.example.obligatorioDDA.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ public abstract class UsuarioEntity {
     private LocalDate fechaRegistro;
 
     @OneToMany(mappedBy = "usuarioEntity", cascade = CascadeType.ALL)
+    @JsonManagedReference // Indica la referencia padre para evitar ciclos --------------------------------------
     private List<VentaEntity> compras;
 
     @Column
@@ -89,6 +91,7 @@ public abstract class UsuarioEntity {
     public void setTarjeta(String tarjeta) {
         this.tarjeta = tarjeta;
     }
+
 
     //Constructor
     public UsuarioEntity(int id, String nombre, String email, String contrasenia) {

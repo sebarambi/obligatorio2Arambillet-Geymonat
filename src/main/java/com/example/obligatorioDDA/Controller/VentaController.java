@@ -1,9 +1,6 @@
 package com.example.obligatorioDDA.Controller;
 
-import com.example.obligatorioDDA.Entity.DetalleVentaEntity;
-import com.example.obligatorioDDA.Entity.UsuarioEntity;
-import com.example.obligatorioDDA.Entity.VentaEntity;
-import com.example.obligatorioDDA.Entity.VideoJuegoEntity;
+import com.example.obligatorioDDA.Entity.*;
 import com.example.obligatorioDDA.Service.UsuarioService;
 import com.example.obligatorioDDA.Service.VentaService;
 import com.example.obligatorioDDA.Service.VideoJuegoService;
@@ -86,6 +83,21 @@ public class VentaController {
             int montoTotal = listaDetalles.stream()
                     .mapToInt(detalle -> detalle.getCantidad() * detalle.getPrecioUnitario())
                     .sum();
+
+
+            // Verificar si el usuario es premium
+            UsuarioEntity usuario = usuarioOpt.get();
+            if (usuario instanceof UsuarioPremiumEntity premiumUsuario &&
+                    premiumUsuario.getFechaMembresia() != null) {
+                montoTotal = (int) (montoTotal * 0.8); // Aplicar un 20% de descuento
+            }
+
+            // Validar que el monto total no sea cero
+            if (montoTotal == 0) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: El monto total no puede ser cero.");
+            }
+
+
             venta.setMontoTotal(montoTotal);
 
             // Asociar los detalles a la venta
@@ -102,7 +114,6 @@ public class VentaController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado: " + e.getMessage());
         }
     }
-
 
 
     private boolean esNuloOInvalido(Object valor) {

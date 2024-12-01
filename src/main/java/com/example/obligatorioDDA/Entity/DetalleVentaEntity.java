@@ -1,5 +1,6 @@
 package com.example.obligatorioDDA.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,6 +11,7 @@ public class DetalleVentaEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_venta", nullable = false)
+    @JsonBackReference // Evita ciclos entre VentaEntity y DetalleVentaEntity
     private VentaEntity ventaEntity;
 
     @ManyToOne
