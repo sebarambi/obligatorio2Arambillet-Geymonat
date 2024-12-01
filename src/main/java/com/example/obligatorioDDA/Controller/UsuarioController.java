@@ -74,6 +74,24 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.getAll());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUsuarioById(@PathVariable int id) {
+        try {
+            // Buscar el usuario por ID
+            Optional<UsuarioEntity> usuarioOpt = usuarioService.findById(id);
+
+            if (usuarioOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
+            }
+
+            // Retornar el usuario encontrado
+            return ResponseEntity.ok(usuarioOpt.get());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener el usuario: " + e.getMessage());
+        }
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteUsuario(@PathVariable int id) {
         usuarioComunService.delete(id);
@@ -155,6 +173,49 @@ public class UsuarioController {
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener las compras: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
+        try {
+            // Validar campos de entrada
+            String email = request.get("email");
+            String password = request.get("password");
+
+            if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("status", 400, "message", "Email y contraseña son obligatorios"));
+            }
+
+            // Llamar al servicio para autenticar al usuario
+            Optional<UsuarioEntity> usuarioOpt = usuarioService.login(email, password);
+
+            if (usuarioOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("status", 401, "message", "Credenciales inválidas"));
+            }
+
+            // Usuario encontrado
+            UsuarioEntity usuario = usuarioOpt.get();
+            Map<String, Object> response = Map.of(
+                    "status", 200,
+                    "message", "User logged in successfully",
+                    "data", Map.of(
+                            "user", Map.of(
+                                    "id", usuario.getId(),
+                                    "name", usuario.getNombre(),
+                                    "email", usuario.getEmail(),
+                                    "password", usuario.getContrasenia(),
+                                    "createdAt", usuario.getFechaRegistro()
+                            )
+                    )
+            );
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("status", 500, "message", "Error en el servidor", "error", e.getMessage()));
         }
     }
 

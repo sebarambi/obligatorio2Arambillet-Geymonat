@@ -33,4 +33,8 @@ public class AdministradorServiceImpl implements AdministradorService {
     public Optional<AdministradorEntity> findAdministradorById(int id) {
         return administradorRepository.findById(id);
     }
+
+    public Optional<AdministradorEntity> findByEmailAndContrasenia(String email, String contrasenia) {
+        return administradorRepository.findByEmailAndContrasenia(email, contrasenia);
+    }
 }

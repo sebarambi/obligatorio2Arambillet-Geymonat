@@ -15,6 +15,7 @@ public interface UsuarioService {
     void delete(int id);
     Optional<UsuarioEntity> findById(int id);
     UsuarioEntity save(UsuarioEntity usuarioEntity);
+    Optional<UsuarioEntity> login(String email, String password);
 
     // Metodo para convertir usuarios
     UsuarioPremiumEntity convertirAUsuarioPremium(int id, String fechaMembresia);

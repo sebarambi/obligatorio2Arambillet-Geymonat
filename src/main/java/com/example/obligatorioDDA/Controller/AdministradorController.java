@@ -94,4 +94,37 @@ public class AdministradorController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al editar el administrador: " + e.getMessage());
         }
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> loginAdministrador(@RequestBody Map<String, String> request) {
+        try {
+            String email = request.get("email");
+            String contrasenia = request.get("contrasenia"); // Cambiado de "password" a "contrasenia"
+
+            if (email == null || email.trim().isEmpty() || contrasenia == null || contrasenia.trim().isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email y contraseña son obligatorios");
+            }
+
+            Optional<AdministradorEntity> adminOpt = administradorService.findByEmailAndContrasenia(email, contrasenia);
+
+            if (adminOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
+            }
+
+            AdministradorEntity administrador = adminOpt.get();
+            return ResponseEntity.ok(Map.of(
+                    "status", 200,
+                    "message", "Login exitoso",
+                    "data", Map.of(
+                            "id", administrador.getIdAdministrador(),
+                            "nombre", administrador.getNombre(),
+                            "email", administrador.getEmail()
+                    )
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error en el servidor: " + e.getMessage());
+        }
+    }
+
 }

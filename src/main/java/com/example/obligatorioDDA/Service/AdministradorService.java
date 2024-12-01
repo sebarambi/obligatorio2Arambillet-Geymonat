@@ -12,5 +12,6 @@ public interface AdministradorService {
     AdministradorEntity save(AdministradorEntity administradorEntity);
     List<AdministradorEntity> getAllAdministradores();
     Optional<AdministradorEntity> findAdministradorById(int id);
+    Optional<AdministradorEntity> findByEmailAndContrasenia(String email, String password);
     void delete(int id);
 }

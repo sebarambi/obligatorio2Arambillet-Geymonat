@@ -132,5 +132,18 @@ public class UsuarioServiceImpl implements UsuarioService {
         return usuarioRepository.save(usuarioEntity);
     }
 
+    @Override
+    public Optional<UsuarioEntity> login(String email, String password) {
+        // Buscar usuario por email
+        Optional<UsuarioEntity> usuarioOpt = usuarioRepository.findByEmail(email);
+
+        // Validar si la contraseña coincide
+        if (usuarioOpt.isPresent() && usuarioOpt.get().getContrasenia().equals(password)) {
+            return usuarioOpt;
+        }
+
+        return Optional.empty();
+    }
+
 }
 
