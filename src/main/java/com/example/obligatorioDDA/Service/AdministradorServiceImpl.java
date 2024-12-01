@@ -1,17 +1,10 @@
 package com.example.obligatorioDDA.Service;
 
 import com.example.obligatorioDDA.Entity.AdministradorEntity;
-import com.example.obligatorioDDA.Entity.UsuarioComunEntity;
-import com.example.obligatorioDDA.Entity.UsuarioEntity;
-import com.example.obligatorioDDA.Entity.UsuarioPremiumEntity;
 import com.example.obligatorioDDA.Repository.AdministradorRepository;
-import com.example.obligatorioDDA.Repository.UsuarioRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 

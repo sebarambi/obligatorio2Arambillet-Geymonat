@@ -5,7 +5,6 @@ import com.example.obligatorioDDA.Entity.UsuarioComunEntity;
 import com.example.obligatorioDDA.Entity.UsuarioEntity;
 import com.example.obligatorioDDA.Entity.UsuarioPremiumEntity;
 import com.example.obligatorioDDA.Service.UsuarioService;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
