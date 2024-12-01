@@ -9,7 +9,7 @@ public class DetalleVentaEntity {
     private int idDetalle;
 
     @ManyToOne
-    @JoinColumn(name = "idVenta")
+    @JoinColumn(name = "id_venta", nullable = false)
     private VentaEntity ventaEntity;
 
     @ManyToOne
@@ -21,6 +21,10 @@ public class DetalleVentaEntity {
 
     @Column
     private int precioUnitario;
+
+    public DetalleVentaEntity() {
+
+    }
 
     // Getters, Setters
     public int getPrecioUnitario() {
@@ -63,9 +67,10 @@ public class DetalleVentaEntity {
         this.idDetalle = idDetalle;
     }
 
+
+
     // Constructor
-    public DetalleVentaEntity(int idDetalle, VentaEntity ventaEntity, VideoJuegoEntity videojuegoEntity, int cantidad, int precioUnitario) {
-        this.idDetalle = idDetalle;
+    public DetalleVentaEntity(VentaEntity ventaEntity, VideoJuegoEntity videojuegoEntity, int cantidad, int precioUnitario) {
         this.ventaEntity = ventaEntity;
         this.videojuegoEntity = videojuegoEntity;
         this.cantidad = cantidad;

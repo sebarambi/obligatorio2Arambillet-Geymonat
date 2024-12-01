@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@Table(name = "Ventas")
 public class VentaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,7 +16,7 @@ public class VentaEntity {
     @JoinColumn(name = "idUsuario")
     private UsuarioEntity usuarioEntity;
 
-    @OneToMany(mappedBy = "ventaEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "ventaEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetalleVentaEntity> listaDetalles;
 
     @Column
@@ -23,6 +24,10 @@ public class VentaEntity {
 
     @Column
     private int montoTotal;
+
+    public VentaEntity() {
+
+    }
 
     //Getters and Setters
     public int getIdVenta() {
