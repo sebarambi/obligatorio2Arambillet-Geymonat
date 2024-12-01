@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -70,8 +72,18 @@ public class VentaController {
 
                 VideoJuegoEntity videojuego = videojuegoOpt.get();
                 int cantidad = Integer.parseInt(detalle.get("cantidad").toString());
-                int precioUnitario = videojuego.getPrecio();
 
+                // Verificar stock
+                if (videojuego.getStock() < cantidad) {
+                    throw new IllegalArgumentException("Error: Stock insuficiente para el videojuego " + videojuego.getNombreVideojuego());
+                }
+
+                // Reducir stock
+                videojuego.setStock(videojuego.getStock() - cantidad);
+                videoJuegoService.save(videojuego); // Guardar cambios en el videojuego
+
+                // Configurar detalles de la venta
+                int precioUnitario = videojuego.getPrecio();
                 detalleVenta.setVideojuegoEntity(videojuego);
                 detalleVenta.setCantidad(cantidad);
                 detalleVenta.setPrecioUnitario(precioUnitario);
@@ -136,4 +148,26 @@ public class VentaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Venta no encontrada");
         }
     }
+
+    @GetMapping("/fecha")
+    public ResponseEntity<?> obtenerVentasPorFecha(@RequestParam String fecha) {
+        try {
+            // Convertir la fecha de String a LocalDate
+            LocalDate fechaConsulta = LocalDate.parse(fecha);
+
+            // Obtener todas las ventas
+            List<VentaEntity> ventasPorFecha = ventaService.getAll().stream()
+                    .filter(venta -> venta.getFechaDeVenta().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().equals(fechaConsulta))
+                    .toList();
+
+            if (ventasPorFecha.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron ventas para la fecha proporcionada.");
+            }
+
+            return ResponseEntity.ok(ventasPorFecha);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al procesar la fecha: " + e.getMessage());
+        }
+    }
+
 }

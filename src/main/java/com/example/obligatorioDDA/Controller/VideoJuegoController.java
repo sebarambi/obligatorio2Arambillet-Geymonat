@@ -124,4 +124,20 @@ public class VideoJuegoController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al eliminar el videojuego: " + e.getMessage());
         }
     }
+
+    @GetMapping("/stock-menor/{cantidad}")
+    public ResponseEntity<?> listarVideojuegosConStockMenor(@PathVariable int cantidad) {
+        try {
+            List<VideoJuegoEntity> videojuegos = videoJuegoService.findByStockLessThan(cantidad);
+
+            if (videojuegos.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No hay videojuegos con stock menor a " + cantidad);
+            }
+
+            return ResponseEntity.ok(videojuegos);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al listar videojuegos con stock menor a " + cantidad + ": " + e.getMessage());
+        }
+    }
 }

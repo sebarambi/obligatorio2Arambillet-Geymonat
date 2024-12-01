@@ -5,6 +5,7 @@ import com.example.obligatorioDDA.Entity.UsuarioComunEntity;
 import com.example.obligatorioDDA.Entity.UsuarioEntity;
 import com.example.obligatorioDDA.Entity.UsuarioPremiumEntity;
 import com.example.obligatorioDDA.Service.UsuarioService;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,13 +61,18 @@ public class UsuarioController {
     }
 
     @GetMapping("/allComun")
-    public ResponseEntity<List<UsuarioComunEntity>> getAllUsuarios() {
+    public ResponseEntity<List<UsuarioComunEntity>> getAllUsuariosComun() {
         return ResponseEntity.ok(usuarioComunService.getAllc());
     }
 
     @GetMapping("/allPremium")
     public ResponseEntity<List<UsuarioPremiumEntity>> getAllUsuariosPremium() {
         return ResponseEntity.ok(usuarioPremiumService.getAllp());
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<UsuarioEntity>> getAllUsuarios() {
+        return ResponseEntity.ok(usuarioService.getAll());
     }
 
     @DeleteMapping("/delete/{id}")
@@ -132,5 +138,25 @@ public class UsuarioController {
         }
     }
 
+    @GetMapping("/{id}/compras")
+    public ResponseEntity<?> getComprasByUsuario(@PathVariable int id) {
+        try {
+            // Buscar el usuario por ID
+            Optional<UsuarioEntity> usuarioOpt = usuarioService.findById(id);
+
+            if (usuarioOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
+            }
+
+            // Obtener el usuario
+            UsuarioEntity usuario = usuarioOpt.get();
+
+            // Devolver la lista de compras
+            return ResponseEntity.ok(usuario.getCompras());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener las compras: " + e.getMessage());
+        }
+    }
 
 }

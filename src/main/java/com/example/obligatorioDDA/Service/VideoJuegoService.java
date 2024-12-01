@@ -10,4 +10,5 @@ public interface VideoJuegoService {
     List<VideoJuegoEntity> getAll();
     Optional<VideoJuegoEntity> findById(int id);
     void delete(int id);
+    List<VideoJuegoEntity> findByStockLessThan(int cantidad);
 }

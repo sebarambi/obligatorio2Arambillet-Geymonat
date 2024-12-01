@@ -29,4 +29,8 @@ public class VideoJuegoServiceImpl implements VideoJuegoService {
     public void delete(int id) {
         videojuegoRepository.deleteById(id);
     }
+
+    public List<VideoJuegoEntity> findByStockLessThan(int cantidad) {
+        return videojuegoRepository.findByStockLessThan(cantidad);
+    }
 }

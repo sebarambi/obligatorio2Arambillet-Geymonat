@@ -30,6 +30,7 @@ public class UsuarioServiceImpl implements UsuarioService {
                 .stream()
                 .filter(UsuarioComunEntity.class::isInstance)
                 .map(UsuarioComunEntity.class::cast)
+                .peek(usuario -> usuario.setCompras(null)) // Establecer compras como null
                 .toList();
     }
 
@@ -39,6 +40,17 @@ public class UsuarioServiceImpl implements UsuarioService {
                 .stream()
                 .filter(UsuarioPremiumEntity.class::isInstance)
                 .map(UsuarioPremiumEntity.class::cast)
+                .peek(usuario -> usuario.setCompras(null)) // Establecer compras como null
+                .toList();
+    }
+
+    @Override
+    public List<UsuarioEntity> getAll() {
+        return usuarioRepository.findAll()
+                .stream()
+                .filter(UsuarioEntity.class::isInstance)
+                .map(UsuarioEntity.class::cast)
+                .peek(usuario -> usuario.setCompras(null)) // Establecer compras como null
                 .toList();
     }
 

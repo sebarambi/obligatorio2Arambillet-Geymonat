@@ -11,6 +11,7 @@ public interface UsuarioService {
     UsuarioComunEntity save(UsuarioComunEntity usuarioComunEntity);
     List<UsuarioComunEntity> getAllc();
     List<UsuarioPremiumEntity> getAllp();
+    List<UsuarioEntity> getAll();
     void delete(int id);
     Optional<UsuarioEntity> findById(int id);
     UsuarioEntity save(UsuarioEntity usuarioEntity);
