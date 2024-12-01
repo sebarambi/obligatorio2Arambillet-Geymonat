@@ -1,6 +1,8 @@
 package com.example.obligatorioDDA.Controller;
 
+import com.example.obligatorioDDA.Entity.AdministradorEntity;
 import com.example.obligatorioDDA.Entity.VideoJuegoEntity;
+import com.example.obligatorioDDA.Service.AdministradorService;
 import com.example.obligatorioDDA.Service.VideoJuegoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -20,15 +23,52 @@ public class VideoJuegoController {
     @Autowired
     private VideoJuegoService videoJuegoService;
 
+    @Autowired
+    private AdministradorService administradorService;
+
     @PostMapping("/add")
-    public ResponseEntity<?> agregarVideojuego(@RequestBody VideoJuegoEntity videojuego) {
+    public ResponseEntity<?> agregarVideojuego(@RequestBody Map<String, Object> requestData) {
         try {
+            // Validar que los campos necesarios no sean nulos o vacíos
+            if (esNuloOInvalido(requestData.get("nombreVideojuego")) ||
+                    esNuloOInvalido(requestData.get("descripcion")) ||
+                    esNuloOInvalido(requestData.get("precio")) ||
+                    esNuloOInvalido(requestData.get("imagen")) ||
+                    esNuloOInvalido(requestData.get("stock")) ||
+                    esNuloOInvalido(requestData.get("idAdministrador"))) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Error: Todos los campos (nombreVideojuego, descripcion, precio, imagen, stock, idAdministrador) son obligatorios.");
+            }
+
+            // Buscar el administrador por ID
+            int idAdministrador = Integer.parseInt(requestData.get("idAdministrador").toString());
+            Optional<AdministradorEntity> administradorOpt = administradorService.findAdministradorById(idAdministrador);
+
+            if (administradorOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: Administrador no encontrado.");
+            }
+
+            // Crear videojuego y asociarlo con el administrador
+            VideoJuegoEntity videojuego = new VideoJuegoEntity();
+            videojuego.setNombreVideojuego((String) requestData.get("nombreVideojuego"));
+            videojuego.setDescripcion((String) requestData.get("descripcion"));
+            videojuego.setPrecio(Integer.parseInt(requestData.get("precio").toString())); // Convertir a int
+            videojuego.setImagen((String) requestData.get("imagen"));
+            videojuego.setStock(Integer.parseInt(requestData.get("stock").toString())); // Convertir a int
+            videojuego.setAdministrador(administradorOpt.get());
+
+            // Guardar videojuego
             VideoJuegoEntity nuevoVideojuego = videoJuegoService.save(videojuego);
             return ResponseEntity.status(HttpStatus.CREATED).body(nuevoVideojuego);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al agregar el videojuego: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error inesperado: " + e.getMessage());
         }
     }
+
+    private boolean esNuloOInvalido(Object valor) {
+        return valor == null || (valor instanceof String && ((String) valor).trim().isEmpty());
+    }
+
 
     @GetMapping("/all")
     public ResponseEntity<List<VideoJuegoEntity>> getAllVideojuegos() {

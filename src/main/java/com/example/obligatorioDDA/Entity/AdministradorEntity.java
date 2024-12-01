@@ -3,6 +3,7 @@ package com.example.obligatorioDDA.Entity;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "Administradores")
@@ -23,6 +24,10 @@ public class AdministradorEntity {
 
     @Column
     private Date fechaRegistro;
+
+    @OneToMany(mappedBy = "administrador", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VideoJuegoEntity> videojuegos;
+
 
     public AdministradorEntity() {
 

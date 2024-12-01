@@ -24,6 +24,10 @@ public class VideoJuegoEntity {
     @Column
     private int stock;
 
+    @ManyToOne
+    @JoinColumn(name = "idAdministrador", nullable = false)
+    private AdministradorEntity administrador;
+
     //Getters and Setters
     public int getIdVideojuego() {
         return idVideojuego;
@@ -73,15 +77,24 @@ public class VideoJuegoEntity {
         this.stock = stock;
     }
 
+    public AdministradorEntity getAdministrador() {
+        return administrador;
+    }
+
+    public void setAdministrador(AdministradorEntity administrador) {
+        this.administrador = administrador;
+    }
+
     //Constructor
 
-    public VideoJuegoEntity(int idVideojuego, String nombreVideojuego, String descripcion, int precio, String imagen, int stock) {
+    public VideoJuegoEntity(int idVideojuego, String nombreVideojuego, String descripcion, int precio, String imagen, int stock, AdministradorEntity administrador) {
         this.idVideojuego = idVideojuego;
         this.nombreVideojuego = nombreVideojuego;
         this.descripcion = descripcion;
         this.precio = precio;
         this.imagen = imagen;
         this.stock = stock;
+        this.administrador = administrador;
     }
 
     public VideoJuegoEntity() {
