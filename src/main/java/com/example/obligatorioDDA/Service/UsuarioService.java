@@ -18,6 +18,6 @@ public interface UsuarioService {
     Optional<UsuarioEntity> login(String email, String password);
 
     // Metodo para convertir usuarios
-    UsuarioPremiumEntity convertirAUsuarioPremium(int id, String fechaMembresia);
+    UsuarioPremiumEntity convertirAUsuarioPremium(int id, String fechaMembresia, String tarjeta);
     UsuarioComunEntity convertirAUsuarioComun(int id);
 }

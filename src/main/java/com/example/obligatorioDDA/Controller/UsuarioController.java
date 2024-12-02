@@ -77,20 +77,38 @@ public class UsuarioController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getUsuarioById(@PathVariable int id) {
         try {
-            // Buscar el usuario por ID
             Optional<UsuarioEntity> usuarioOpt = usuarioService.findById(id);
 
             if (usuarioOpt.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
             }
 
-            // Retornar el usuario encontrado
-            return ResponseEntity.ok(usuarioOpt.get());
+            UsuarioEntity usuario = usuarioOpt.get();
+            String tipoUsuario;
+
+            if (usuario instanceof UsuarioPremiumEntity) {
+                tipoUsuario = "Premium";
+            } else if (usuario instanceof UsuarioComunEntity) {
+                tipoUsuario = "Común";
+            } else {
+                tipoUsuario = "Desconocido";
+            }
+
+            Map<String, Object> response = Map.of(
+                    "id", usuario.getId(),
+                    "nombre", usuario.getNombre(),
+                    "email", usuario.getEmail(),
+                    "fechaRegistro", usuario.getFechaRegistro(),
+                    "tipoUsuario", tipoUsuario
+            );
+
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al obtener el usuario: " + e.getMessage());
         }
     }
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteUsuario(@PathVariable int id) {
@@ -103,7 +121,13 @@ public class UsuarioController {
             @PathVariable int id, @RequestBody Map<String, Object> requestData) {
         try {
             String fechaMembresia = (String) requestData.get("fechaMembresia");
-            UsuarioPremiumEntity usuarioPremium = usuarioComunService.convertirAUsuarioPremium(id, fechaMembresia);
+            String tarjeta = (String) requestData.get("tarjeta");
+
+            if (tarjeta == null || tarjeta.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El número de tarjeta es obligatorio.");
+            }
+
+            UsuarioPremiumEntity usuarioPremium = usuarioComunService.convertirAUsuarioPremium(id, fechaMembresia, tarjeta);
             return ResponseEntity.ok(usuarioPremium);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

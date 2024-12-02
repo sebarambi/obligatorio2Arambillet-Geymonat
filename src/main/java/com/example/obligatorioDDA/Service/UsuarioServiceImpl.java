@@ -60,8 +60,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Transactional
-    @Override
-    public UsuarioPremiumEntity convertirAUsuarioPremium(int id, String fechaMembresia) {
+    public UsuarioPremiumEntity convertirAUsuarioPremium(int id, String fechaMembresia, String tarjeta) {
         Optional<UsuarioEntity> usuarioEntityOpt = usuarioRepository.findById(id);
 
         if (usuarioEntityOpt.isEmpty() || !(usuarioEntityOpt.get() instanceof UsuarioComunEntity)) {
@@ -83,10 +82,16 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuarioPremium.setContrasenia(usuarioComun.getContrasenia());
         usuarioPremium.setFechaRegistro(usuarioComun.getFechaRegistro());
 
+        // Validar la tarjeta antes de asignarla
+        if (tarjeta == null || tarjeta.trim().isEmpty()) {
+            throw new IllegalArgumentException("El número de tarjeta es obligatorio.");
+        }
+        usuarioPremium.setTarjeta(tarjeta); // Guardar el número de tarjeta
+
         // Convertir fechaMembresia a LocalDate
         try {
             LocalDate fechaLocalDate = LocalDate.parse(fechaMembresia); // Formato esperado: yyyy-MM-dd
-            usuarioPremium.setFechaMembresia(fechaLocalDate); // Asignar directamente como LocalDate
+            usuarioPremium.setFechaMembresia(fechaLocalDate);
         } catch (Exception e) {
             throw new IllegalArgumentException("Fecha inválida. Formato esperado: yyyy-MM-dd.");
         }
@@ -94,6 +99,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         // Guardar como UsuarioPremium
         return usuarioRepository.save(usuarioPremium);
     }
+
 
     @Transactional
     public UsuarioComunEntity convertirAUsuarioComun(int id) {
@@ -117,6 +123,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuarioComun.setEmail(usuarioPremium.getEmail());
         usuarioComun.setContrasenia(usuarioPremium.getContrasenia());
         usuarioComun.setFechaRegistro(usuarioPremium.getFechaRegistro());
+        usuarioComun.setTarjeta(usuarioPremium.getTarjeta());
 
         // Guardar como UsuarioComun
         return usuarioRepository.save(usuarioComun);
