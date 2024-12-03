@@ -94,12 +94,24 @@ public class UsuarioController {
                 tipoUsuario = "Desconocido";
             }
 
+            // Verificar si la tarjeta no es nula antes de procesarla
+            String tarjetaOculta = null;
+            if (usuario.getTarjeta() != null) {
+                String tarjeta = usuario.getTarjeta();
+                if (tarjeta.length() >= 4) {
+                    tarjetaOculta = "**** **** **** " + tarjeta.substring(tarjeta.length() - 4);
+                } else {
+                    tarjetaOculta = "Número de tarjeta inválido";
+                }
+            }
+
             Map<String, Object> response = Map.of(
                     "id", usuario.getId(),
                     "nombre", usuario.getNombre(),
                     "email", usuario.getEmail(),
                     "fechaRegistro", usuario.getFechaRegistro(),
-                    "tipoUsuario", tipoUsuario
+                    "tipoUsuario", tipoUsuario,
+                    "tarjeta", tarjetaOculta
             );
 
             return ResponseEntity.ok(response);
@@ -108,6 +120,8 @@ public class UsuarioController {
                     .body("Error al obtener el usuario: " + e.getMessage());
         }
     }
+
+
 
 
     @DeleteMapping("/delete/{id}")

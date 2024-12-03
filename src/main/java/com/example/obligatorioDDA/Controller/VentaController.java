@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000") //aca cambiar cuando hagamos react
 @RequestMapping("/ventas")
 public class VentaController {
 
