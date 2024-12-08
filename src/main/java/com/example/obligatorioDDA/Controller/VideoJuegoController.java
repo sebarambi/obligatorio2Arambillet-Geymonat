@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Controller
+@RestController
 @CrossOrigin(origins = "http://localhost:3000") // Cambiar para producción
 @RequestMapping("/videojuegos")
 

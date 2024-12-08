@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Controller
+@RestController
 @CrossOrigin(origins = "http://localhost:3000") //aca cambiar cuando hagamos react
 @RequestMapping("/usuarios")
 public class UsuarioController {

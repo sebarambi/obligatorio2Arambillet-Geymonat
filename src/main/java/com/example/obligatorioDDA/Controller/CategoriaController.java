@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@Controller
+@RestController
 @CrossOrigin(origins = "http://localhost:3000") // Cambiar para producción
 @RequestMapping("/categorias")
 public class CategoriaController {
