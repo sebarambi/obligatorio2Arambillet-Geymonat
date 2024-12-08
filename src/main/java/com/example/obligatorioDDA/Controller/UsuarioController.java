@@ -89,6 +89,9 @@ public class UsuarioController {
 
             UsuarioEntity usuario = usuarioOpt.get();
 
+            // Determinar si el usuario tiene tarjeta
+            boolean tieneTarjeta = usuario.getTarjeta() != null && !usuario.getTarjeta().isBlank();
+
             // Determinar el tipo de usuario
             if (usuario instanceof UsuarioPremiumEntity) {
                 UsuarioPremiumEntity usuarioPremium = (UsuarioPremiumEntity) usuario;
@@ -100,9 +103,8 @@ public class UsuarioController {
                         "email", usuarioPremium.getEmail(),
                         "tipoUsuario", "Premium",
                         "fechaMembresia", usuarioPremium.getFechaMembresia(),
-                        "fechaRegistro", usuarioPremium.getFechaRegistro()
-
-
+                        "fechaRegistro", usuarioPremium.getFechaRegistro(),
+                        "tarjeta", tieneTarjeta // Agregar si tiene tarjeta
                 );
                 return ResponseEntity.ok(response);
 
@@ -115,9 +117,8 @@ public class UsuarioController {
                         "nombre", usuarioComun.getNombre(),
                         "email", usuarioComun.getEmail(),
                         "tipoUsuario", "Común",
-                        "fechaRegistro", usuarioComun.getFechaRegistro()
-
-
+                        "fechaRegistro", usuarioComun.getFechaRegistro(),
+                        "tarjeta", tieneTarjeta // Agregar si tiene tarjeta
                 );
                 return ResponseEntity.ok(response);
             }
@@ -131,6 +132,7 @@ public class UsuarioController {
                     .body("Error al obtener el usuario: " + e.getMessage());
         }
     }
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteUsuario(@PathVariable int id) {
