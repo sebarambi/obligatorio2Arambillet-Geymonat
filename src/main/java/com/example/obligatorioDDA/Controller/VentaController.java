@@ -171,4 +171,28 @@ public class VentaController {
         }
     }
 
+    @GetMapping("/usuario/{idUsuario}")
+    public ResponseEntity<?> obtenerVentasPorUsuario(@PathVariable int idUsuario) {
+        try {
+            // Verificar si el usuario existe
+            Optional<UsuarioEntity> usuarioOpt = usuarioService.findById(idUsuario);
+            if (usuarioOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
+            }
+
+            // Filtrar ventas por usuario
+            List<VentaEntity> ventasPorUsuario = ventaService.getAll().stream()
+                    .filter(venta -> venta.getUsuarioEntity().getId() == idUsuario)
+                    .toList();
+
+            if (ventasPorUsuario.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron ventas para este usuario.");
+            }
+
+            return ResponseEntity.ok(ventasPorUsuario);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar la solicitud: " + e.getMessage());
+        }
+    }
+
 }

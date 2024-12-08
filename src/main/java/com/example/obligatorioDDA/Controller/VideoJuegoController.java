@@ -76,19 +76,23 @@ public class VideoJuegoController {
 
 
     @GetMapping("/all")
-    public ResponseEntity<List<VideoJuegoDTO>> getAllVideojuegosDTO() {
+    public ResponseEntity<List<VideoJuegoDTO>> getAllVideojuegos() {
         // Obtener lista de entidades
         List<VideoJuegoEntity> videojuegos = videoJuegoService.getAll();
 
-        // Convertir cada VideoJuegoEntity a VideoJuegoDTO
+        // Convertir las entidades a DTOs
         List<VideoJuegoDTO> videojuegosDTO = videojuegos.stream()
                 .map(videojuego -> new VideoJuegoDTO(
-                        videojuego.getIdVideojuego(),               // Asume que este es el ID
-                        videojuego.getNombreVideojuego(),           // Nombre del videojuego
-                        videojuego.getDescripcion(),               // Descripción
-                        videojuego.getPrecio()                     // Precio
+                        videojuego.getIdVideojuego(),
+                        videojuego.getNombreVideojuego(),
+                        videojuego.getDescripcion(),
+                        videojuego.getPrecio(),
+                        videojuego.getImagen(),
+                        videojuego.getStock(),
+                        videojuego.getAdministrador().getIdAdministrador(),
+                        videojuego.getCategoria().getIdCategoria()
                 ))
-                .collect(Collectors.toList());                     // Convertir a List
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok(videojuegosDTO);
     }
@@ -97,10 +101,21 @@ public class VideoJuegoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getVideojuegoById(@PathVariable int id) {
-        Optional<VideoJuegoEntity> videojuego = videoJuegoService.findById(id);
+        Optional<VideoJuegoEntity> videojuegoOpt = videoJuegoService.findById(id);
 
-        if (videojuego.isPresent()) {
-            return ResponseEntity.ok(videojuego.get());
+        if (videojuegoOpt.isPresent()) {
+            VideoJuegoEntity videojuego = videojuegoOpt.get();
+            VideoJuegoDTO videojuegoDTO = new VideoJuegoDTO(
+                    videojuego.getIdVideojuego(),
+                    videojuego.getNombreVideojuego(),
+                    videojuego.getDescripcion(),
+                    videojuego.getPrecio(),
+                    videojuego.getImagen(),
+                    videojuego.getStock(),
+                    videojuego.getAdministrador().getIdAdministrador(),
+                    videojuego.getCategoria().getIdCategoria()
+            );
+            return ResponseEntity.ok(videojuegoDTO);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Videojuego no encontrado");
         }
@@ -172,16 +187,35 @@ public class VideoJuegoController {
     @GetMapping("/stock-menor/{cantidad}")
     public ResponseEntity<?> listarVideojuegosConStockMenor(@PathVariable int cantidad) {
         try {
+            // Obtener la lista de videojuegos con stock menor a la cantidad
             List<VideoJuegoEntity> videojuegos = videoJuegoService.findByStockLessThan(cantidad);
 
             if (videojuegos.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No hay videojuegos con stock menor a " + cantidad);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No hay videojuegos con stock menor a " + cantidad);
             }
 
-            return ResponseEntity.ok(videojuegos);
+            // Convertir las entidades a DTOs
+            List<VideoJuegoDTO> videojuegosDTO = videojuegos.stream()
+                    .map(videojuego -> new VideoJuegoDTO(
+                            videojuego.getIdVideojuego(),
+                            videojuego.getNombreVideojuego(),
+                            videojuego.getDescripcion(),
+                            videojuego.getPrecio(),
+                            videojuego.getImagen(),
+                            videojuego.getStock(),
+                            videojuego.getAdministrador().getIdAdministrador(),
+                            videojuego.getCategoria().getIdCategoria()
+                    ))
+                    .collect(Collectors.toList());
+
+            // Retornar la lista de DTOs
+            return ResponseEntity.ok(videojuegosDTO);
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al listar videojuegos con stock menor a " + cantidad + ": " + e.getMessage());
         }
     }
+
 }

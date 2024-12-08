@@ -80,6 +80,7 @@ public class UsuarioController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getUsuarioById(@PathVariable int id) {
         try {
+            // Buscar el usuario por ID
             Optional<UsuarioEntity> usuarioOpt = usuarioService.findById(id);
 
             if (usuarioOpt.isEmpty()) {
@@ -87,45 +88,44 @@ public class UsuarioController {
             }
 
             UsuarioEntity usuario = usuarioOpt.get();
-            String tipoUsuario;
 
+            // Determinar el tipo de usuario
             if (usuario instanceof UsuarioPremiumEntity) {
-                tipoUsuario = "Premium";
+                UsuarioPremiumEntity usuarioPremium = (UsuarioPremiumEntity) usuario;
+
+                // Crear respuesta con datos específicos del usuario premium
+                Map<String, Object> response = Map.of(
+                        "id", usuarioPremium.getId(),
+                        "nombre", usuarioPremium.getNombre(),
+                        "email", usuarioPremium.getEmail(),
+                        "tipoUsuario", "Premium"
+
+                );
+                return ResponseEntity.ok(response);
+
             } else if (usuario instanceof UsuarioComunEntity) {
-                tipoUsuario = "Común";
-            } else {
-                tipoUsuario = "Desconocido";
+                UsuarioComunEntity usuarioComun = (UsuarioComunEntity) usuario;
+
+                // Crear respuesta con datos específicos del usuario común
+                Map<String, Object> response = Map.of(
+                        "id", usuarioComun.getId(),
+                        "nombre", usuarioComun.getNombre(),
+                        "email", usuarioComun.getEmail(),
+                        "tipoUsuario", "Común"
+
+                );
+                return ResponseEntity.ok(response);
             }
 
-            // Verificar si la tarjeta no es nula antes de procesarla
-            String tarjetaOculta = null;
-            if (usuario.getTarjeta() != null) {
-                String tarjeta = usuario.getTarjeta();
-                if (tarjeta.length() >= 4) {
-                    tarjetaOculta = "**** **** **** " + tarjeta.substring(tarjeta.length() - 4);
-                } else {
-                    tarjetaOculta = "Número de tarjeta inválido";
-                }
-            }
+            // Si el tipo de usuario no es reconocido
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Tipo de usuario desconocido.");
 
-            Map<String, Object> response = Map.of(
-                    "id", usuario.getId(),
-                    "nombre", usuario.getNombre(),
-                    "email", usuario.getEmail(),
-                    "fechaRegistro", usuario.getFechaRegistro(),
-                    "tipoUsuario", tipoUsuario,
-                    "tarjeta", tarjetaOculta
-            );
-
-            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al obtener el usuario: " + e.getMessage());
         }
     }
-
-
-
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteUsuario(@PathVariable int id) {
