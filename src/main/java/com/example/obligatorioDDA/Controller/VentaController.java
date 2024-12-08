@@ -6,6 +6,7 @@ import com.example.obligatorioDDA.Service.VentaService;
 import com.example.obligatorioDDA.Service.VideoJuegoService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -171,27 +172,33 @@ public class VentaController {
         }
     }
 
-    @GetMapping("/usuario/{idUsuario}")
-    public ResponseEntity<?> obtenerVentasPorUsuario(@PathVariable int idUsuario) {
+    @GetMapping("/fechas")
+    public ResponseEntity<?> obtenerVentasPorFechas(
+            @RequestParam("inicio") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaInicio,
+            @RequestParam("fin") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaFin) {
+
         try {
-            // Verificar si el usuario existe
-            Optional<UsuarioEntity> usuarioOpt = usuarioService.findById(idUsuario);
-            if (usuarioOpt.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
+            if (fechaInicio == null || fechaFin == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("message", "Las fechas de inicio y fin son obligatorias."));
             }
 
-            // Filtrar ventas por usuario
-            List<VentaEntity> ventasPorUsuario = ventaService.getAll().stream()
-                    .filter(venta -> venta.getUsuarioEntity().getId() == idUsuario)
-                    .toList();
-
-            if (ventasPorUsuario.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron ventas para este usuario.");
+            if (fechaFin.before(fechaInicio)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("message", "La fecha de fin no puede ser anterior a la fecha de inicio."));
             }
 
-            return ResponseEntity.ok(ventasPorUsuario);
+            List<VentaEntity> ventas = ventaService.obtenerVentasPorRangoDeFechas(fechaInicio, fechaFin);
+
+            if (ventas.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("message", "No se encontraron ventas en el rango de fechas especificado."));
+            }
+
+            return ResponseEntity.ok(ventas);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar la solicitud: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Error al buscar ventas: " + e.getMessage()));
         }
     }
 
