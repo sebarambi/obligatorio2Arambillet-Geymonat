@@ -98,7 +98,10 @@ public class UsuarioController {
                         "id", usuarioPremium.getId(),
                         "nombre", usuarioPremium.getNombre(),
                         "email", usuarioPremium.getEmail(),
-                        "tipoUsuario", "Premium"
+                        "tipoUsuario", "Premium",
+                        "fechaMembresia", usuarioPremium.getFechaMembresia(),
+                        "fechaRegistro", usuarioPremium.getFechaRegistro()
+
 
                 );
                 return ResponseEntity.ok(response);
@@ -111,7 +114,9 @@ public class UsuarioController {
                         "id", usuarioComun.getId(),
                         "nombre", usuarioComun.getNombre(),
                         "email", usuarioComun.getEmail(),
-                        "tipoUsuario", "Común"
+                        "tipoUsuario", "Común",
+                        "fechaRegistro", usuarioComun.getFechaRegistro()
+
 
                 );
                 return ResponseEntity.ok(response);
