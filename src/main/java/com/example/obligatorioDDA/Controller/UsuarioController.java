@@ -1,6 +1,9 @@
 package com.example.obligatorioDDA.Controller;
 
 
+import com.example.obligatorioDDA.EntitiesDTOs.UsuarioComunDTO;
+import com.example.obligatorioDDA.EntitiesDTOs.UsuarioDTO;
+import com.example.obligatorioDDA.EntitiesDTOs.UsuarioPremiumDTO;
 import com.example.obligatorioDDA.Entity.UsuarioComunEntity;
 import com.example.obligatorioDDA.Entity.UsuarioEntity;
 import com.example.obligatorioDDA.Entity.UsuarioPremiumEntity;
@@ -60,17 +63,17 @@ public class UsuarioController {
     }
 
     @GetMapping("/allComun")
-    public ResponseEntity<List<UsuarioComunEntity>> getAllUsuariosComun() {
+    public ResponseEntity<List<UsuarioComunDTO>> getAllUsuariosComun() {
         return ResponseEntity.ok(usuarioComunService.getAllc());
     }
 
     @GetMapping("/allPremium")
-    public ResponseEntity<List<UsuarioPremiumEntity>> getAllUsuariosPremium() {
+    public ResponseEntity<List<UsuarioPremiumDTO>> getAllUsuariosPremium() {
         return ResponseEntity.ok(usuarioPremiumService.getAllp());
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<UsuarioEntity>> getAllUsuarios() {
+    public ResponseEntity<List<UsuarioDTO>> getAllUsuarios() {
         return ResponseEntity.ok(usuarioService.getAll());
     }
 

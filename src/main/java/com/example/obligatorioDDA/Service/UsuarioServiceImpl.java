@@ -1,5 +1,8 @@
 package com.example.obligatorioDDA.Service;
 
+import com.example.obligatorioDDA.EntitiesDTOs.UsuarioComunDTO;
+import com.example.obligatorioDDA.EntitiesDTOs.UsuarioDTO;
+import com.example.obligatorioDDA.EntitiesDTOs.UsuarioPremiumDTO;
 import com.example.obligatorioDDA.Entity.UsuarioComunEntity;
 import com.example.obligatorioDDA.Entity.UsuarioEntity;
 import com.example.obligatorioDDA.Entity.UsuarioPremiumEntity;
@@ -25,34 +28,50 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public List<UsuarioComunEntity> getAllc() {
+    public List<UsuarioComunDTO> getAllc() {
         return usuarioRepository.findAll()
                 .stream()
-                .filter(UsuarioComunEntity.class::isInstance)
-                .map(UsuarioComunEntity.class::cast)
-                .peek(usuario -> usuario.setCompras(null)) // Establecer compras como null
+                .filter(UsuarioComunEntity.class::isInstance) // Filtra solo los objetos de tipo UsuarioPremiumEntity
+                .map(usuarioEntity -> (UsuarioComunEntity) usuarioEntity) // Haz un cast seguro a UsuarioPremiumEntity
+                .map(usuarioComunEntity -> new UsuarioComunDTO(
+                        usuarioComunEntity.getId(),
+                        usuarioComunEntity.getFechaRegistro(),
+                        usuarioComunEntity.getEmail(),
+                        usuarioComunEntity.getNombre()
+                ))
                 .toList();
     }
 
     @Override
-    public List<UsuarioPremiumEntity> getAllp() {
+    public List<UsuarioPremiumDTO> getAllp() {
         return usuarioRepository.findAll()
                 .stream()
-                .filter(UsuarioPremiumEntity.class::isInstance)
-                .map(UsuarioPremiumEntity.class::cast)
-                .peek(usuario -> usuario.setCompras(null)) // Establecer compras como null
+                .filter(UsuarioPremiumEntity.class::isInstance) // Filtra solo los objetos de tipo UsuarioPremiumEntity
+                .map(usuarioEntity -> (UsuarioPremiumEntity) usuarioEntity) // Haz un cast seguro a UsuarioPremiumEntity
+                .map(usuarioPremiumEntity -> new UsuarioPremiumDTO(
+                        usuarioPremiumEntity.getId(),
+                        usuarioPremiumEntity.getFechaRegistro(),
+                        usuarioPremiumEntity.getEmail(),
+                        usuarioPremiumEntity.getNombre(),
+                        usuarioPremiumEntity.getFechaMembresia()
+                ))
                 .toList();
     }
 
+
     @Override
-    public List<UsuarioEntity> getAll() {
+    public List<UsuarioDTO> getAll() {
         return usuarioRepository.findAll()
                 .stream()
-                .filter(UsuarioEntity.class::isInstance)
-                .map(UsuarioEntity.class::cast)
-                .peek(usuario -> usuario.setCompras(null)) // Establecer compras como null
+                .map(usuarioEntity -> new UsuarioDTO(
+                        usuarioEntity.getId(),
+                        usuarioEntity.getFechaRegistro(), // Convierte LocalDate a String
+                        usuarioEntity.getEmail(),
+                        usuarioEntity.getNombre()
+                ))
                 .toList();
     }
+
 
     @Override
     public void delete(int id) {

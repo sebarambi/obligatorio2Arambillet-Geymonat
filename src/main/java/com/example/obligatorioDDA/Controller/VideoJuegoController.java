@@ -1,8 +1,11 @@
 package com.example.obligatorioDDA.Controller;
 
+import com.example.obligatorioDDA.EntitiesDTOs.VideoJuegoDTO;
 import com.example.obligatorioDDA.Entity.AdministradorEntity;
+import com.example.obligatorioDDA.Entity.CategoriaEntity;
 import com.example.obligatorioDDA.Entity.VideoJuegoEntity;
 import com.example.obligatorioDDA.Service.AdministradorService;
+import com.example.obligatorioDDA.Service.CategoriaService;
 import com.example.obligatorioDDA.Service.VideoJuegoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @CrossOrigin(origins = "http://localhost:3000") // Cambiar para producción
@@ -26,38 +30,37 @@ public class VideoJuegoController {
     @Autowired
     private AdministradorService administradorService;
 
+    @Autowired
+    private CategoriaService categoriaService;
+
     @PostMapping("/add")
-    public ResponseEntity<?> agregarVideojuego(@RequestBody Map<String, Object> requestData) {
+    public ResponseEntity<?> agregarVideojuego(@RequestBody VideoJuegoEntity videojuego) {
         try {
-            // Validar que los campos necesarios no sean nulos o vacíos
-            if (esNuloOInvalido(requestData.get("nombreVideojuego")) ||
-                    esNuloOInvalido(requestData.get("descripcion")) ||
-                    esNuloOInvalido(requestData.get("precio")) ||
-                    esNuloOInvalido(requestData.get("imagen")) ||
-                    esNuloOInvalido(requestData.get("stock")) ||
-                    esNuloOInvalido(requestData.get("idAdministrador"))) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("Error: Todos los campos (nombreVideojuego, descripcion, precio, imagen, stock, idAdministrador) son obligatorios.");
+            // Validar administrador y categoría
+            if (videojuego.getAdministrador() == null || videojuego.getAdministrador().getIdAdministrador() == 0) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Administrador no proporcionado.");
+            }
+            if (videojuego.getCategoria() == null || videojuego.getCategoria().getIdCategoria() == 0) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Categoría no proporcionada.");
             }
 
-            // Buscar el administrador por ID
-            int idAdministrador = Integer.parseInt(requestData.get("idAdministrador").toString());
-            Optional<AdministradorEntity> administradorOpt = administradorService.findAdministradorById(idAdministrador);
-
+            // Verificar existencia del administrador
+            Optional<AdministradorEntity> administradorOpt = administradorService.findAdministradorById(videojuego.getAdministrador().getIdAdministrador());
             if (administradorOpt.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: Administrador no encontrado.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Administrador no encontrado.");
             }
 
-            // Crear videojuego y asociarlo con el administrador
-            VideoJuegoEntity videojuego = new VideoJuegoEntity();
-            videojuego.setNombreVideojuego((String) requestData.get("nombreVideojuego"));
-            videojuego.setDescripcion((String) requestData.get("descripcion"));
-            videojuego.setPrecio(Integer.parseInt(requestData.get("precio").toString())); // Convertir a int
-            videojuego.setImagen((String) requestData.get("imagen"));
-            videojuego.setStock(Integer.parseInt(requestData.get("stock").toString())); // Convertir a int
-            videojuego.setAdministrador(administradorOpt.get());
+            // Verificar existencia de la categoría
+            Optional<CategoriaEntity> categoriaOpt = categoriaService.findCategoriaById(videojuego.getCategoria().getIdCategoria());
+            if (categoriaOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Categoría no encontrada.");
+            }
 
-            // Guardar videojuego
+            // Asignar administrador y categoría
+            videojuego.setAdministrador(administradorOpt.get());
+            videojuego.setCategoria(categoriaOpt.get());
+
+            // Guardar el videojuego
             VideoJuegoEntity nuevoVideojuego = videoJuegoService.save(videojuego);
             return ResponseEntity.status(HttpStatus.CREATED).body(nuevoVideojuego);
         } catch (Exception e) {
@@ -65,15 +68,32 @@ public class VideoJuegoController {
         }
     }
 
+
     private boolean esNuloOInvalido(Object valor) {
         return valor == null || (valor instanceof String && ((String) valor).trim().isEmpty());
     }
 
 
+
     @GetMapping("/all")
-    public ResponseEntity<List<VideoJuegoEntity>> getAllVideojuegos() {
-        return ResponseEntity.ok(videoJuegoService.getAll());
+    public ResponseEntity<List<VideoJuegoDTO>> getAllVideojuegosDTO() {
+        // Obtener lista de entidades
+        List<VideoJuegoEntity> videojuegos = videoJuegoService.getAll();
+
+        // Convertir cada VideoJuegoEntity a VideoJuegoDTO
+        List<VideoJuegoDTO> videojuegosDTO = videojuegos.stream()
+                .map(videojuego -> new VideoJuegoDTO(
+                        videojuego.getIdVideojuego(),               // Asume que este es el ID
+                        videojuego.getNombreVideojuego(),           // Nombre del videojuego
+                        videojuego.getDescripcion(),               // Descripción
+                        videojuego.getPrecio()                     // Precio
+                ))
+                .collect(Collectors.toList());                     // Convertir a List
+
+        return ResponseEntity.ok(videojuegosDTO);
     }
+
+
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getVideojuegoById(@PathVariable int id) {
@@ -96,18 +116,42 @@ public class VideoJuegoController {
 
         try {
             VideoJuegoEntity videojuegoActualizado = videojuegoExistente.get();
+
+            // Actualizar campos básicos
             videojuegoActualizado.setNombreVideojuego(videojuego.getNombreVideojuego());
             videojuegoActualizado.setDescripcion(videojuego.getDescripcion());
             videojuegoActualizado.setPrecio(videojuego.getPrecio());
             videojuegoActualizado.setImagen(videojuego.getImagen());
             videojuegoActualizado.setStock(videojuego.getStock());
 
+            // Validar y asignar la categoría
+            if (videojuego.getCategoria() != null && videojuego.getCategoria().getIdCategoria() != 0) {
+                Optional<CategoriaEntity> categoriaOpt = categoriaService.findCategoriaById(videojuego.getCategoria().getIdCategoria());
+                if (categoriaOpt.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Categoría no válida");
+                }
+                videojuegoActualizado.setCategoria(categoriaOpt.get());
+            }
+
+            // Validar y asignar el administrador
+            if (videojuego.getAdministrador() != null && videojuego.getAdministrador().getIdAdministrador() != 0) {
+                Optional<AdministradorEntity> administradorOpt = administradorService.findAdministradorById(videojuego.getAdministrador().getIdAdministrador());
+                if (administradorOpt.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Administrador no válido");
+                }
+                videojuegoActualizado.setAdministrador(administradorOpt.get());
+            }
+
             VideoJuegoEntity videojuegoGuardado = videoJuegoService.save(videojuegoActualizado);
             return ResponseEntity.ok(videojuegoGuardado);
+
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al actualizar el videojuego: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar el videojuego: " + e.getMessage());
         }
     }
+
+
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteVideojuego(@PathVariable int id) {

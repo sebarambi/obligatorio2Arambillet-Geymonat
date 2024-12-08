@@ -2,6 +2,8 @@ package com.example.obligatorioDDA.Entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "Categorias")
 public class CategoriaEntity {
@@ -11,6 +13,9 @@ public class CategoriaEntity {
 
     @Column(unique = true)
     private String nombre;
+
+    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VideoJuegoEntity> videojuegos;
 
     //Getters and Setters
     public int getIdCategoria() {
@@ -32,4 +37,14 @@ public class CategoriaEntity {
     public CategoriaEntity(String nombre) {
         this.nombre = nombre;
     }
+
+    public CategoriaEntity(int idCategoria, String nombre, List<VideoJuegoEntity> videojuegos) {
+        this.idCategoria = idCategoria;
+        this.nombre = nombre;
+        this.videojuegos = videojuegos;
+    }
+
+    public CategoriaEntity() {
+    }
 }
+

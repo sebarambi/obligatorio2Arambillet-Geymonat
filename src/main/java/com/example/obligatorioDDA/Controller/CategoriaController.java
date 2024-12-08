@@ -36,7 +36,7 @@ public class CategoriaController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteCategoria(@PathVariable int id) {
-        Optional<CategoriaEntity> categoriaExistente = categoriaService.findById(id);
+        Optional<CategoriaEntity> categoriaExistente = categoriaService.findCategoriaById(id);
 
         if (categoriaExistente.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Categoría no encontrada");

@@ -1,38 +1,18 @@
-package com.example.obligatorioDDA.Entity;
+package com.example.obligatorioDDA.EntitiesDTOs;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "Videojuegos")
-public class VideoJuegoEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idVideojuego;
-
-    @Column
+public class VideoJuegoDTO {
+    private  int idVideojuego;
     private String nombreVideojuego;
-
-    @Column
     private String descripcion;
-
-    @Column
     private int precio;
-
-    @Column
     private String imagen;
-
-    @Column
     private int stock;
+    private int idAdministrador;
+    private int idCategoria;
 
-    @ManyToOne
-    @JoinColumn(name = "idAdministrador", nullable = false)
-    private AdministradorEntity administrador;
+    public VideoJuegoDTO(int idVideojuego, String nombreVideojuego, String descripcion, int precio) {
+    }
 
-    @ManyToOne
-    @JoinColumn(name = "idCategoria", nullable = false)
-    private CategoriaEntity categoria;
-
-    //Getters and Setters
     public int getIdVideojuego() {
         return idVideojuego;
     }
@@ -81,35 +61,31 @@ public class VideoJuegoEntity {
         this.stock = stock;
     }
 
-    public AdministradorEntity getAdministrador() {
-        return administrador;
+    public int getIdAdministrador() {
+        return idAdministrador;
     }
 
-    public void setAdministrador(AdministradorEntity administrador) {
-        this.administrador = administrador;
+    public void setIdAdministrador(int idAdministrador) {
+        this.idAdministrador = idAdministrador;
     }
 
-    public CategoriaEntity getCategoria() {
-        return categoria;
+    public int getIdCategoria() {
+        return idCategoria;
     }
 
-    public void setCategoria(CategoriaEntity categoria) {
-        this.categoria = categoria;
+    public void setIdCategoria(int idCategoria) {
+        this.idCategoria = idCategoria;
     }
 
-    //Constructor
-
-    public VideoJuegoEntity(int idVideojuego, String nombreVideojuego, String descripcion, int precio, String imagen, int stock, AdministradorEntity administrador, CategoriaEntity categoria) {
+    public VideoJuegoDTO(int idVideojuego, String nombreVideojuego, String descripcion, int precio, String imagen, int stock, int idAdministrador, int idCategoria) {
         this.idVideojuego = idVideojuego;
         this.nombreVideojuego = nombreVideojuego;
         this.descripcion = descripcion;
         this.precio = precio;
         this.imagen = imagen;
         this.stock = stock;
-        this.administrador = administrador;
-        this.categoria = categoria;
-    }
-
-    public VideoJuegoEntity() {
+        this.idAdministrador = idAdministrador;
+        this.idCategoria = idCategoria;
     }
 }
+

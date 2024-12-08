@@ -1,9 +1,6 @@
 package com.example.obligatorioDDA.Service;
 
-import com.example.obligatorioDDA.Entity.AdministradorEntity;
-import com.example.obligatorioDDA.Entity.UsuarioComunEntity;
-import com.example.obligatorioDDA.Entity.UsuarioEntity;
-import com.example.obligatorioDDA.Entity.UsuarioPremiumEntity;
+import com.example.obligatorioDDA.Entity.*;
 
 import java.util.List;
 import java.util.Optional;

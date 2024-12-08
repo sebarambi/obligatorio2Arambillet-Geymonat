@@ -24,8 +24,7 @@ public class CategoriaServiceImpl implements CategoriaService {
         return categoriaRepository.findAll();
     }
 
-
-    public Optional<CategoriaEntity> findById(int id) {
+    public Optional<CategoriaEntity> findCategoriaById(int id) {
         return categoriaRepository.findById(id);
     }
 
